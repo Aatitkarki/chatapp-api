@@ -1,12 +1,12 @@
 // Importing modules
-const Message = require('./models/schema.js')
+// const Message = require('./models/schema.js')
 const express = require('express');
 const app = express();
 const https = require('http').Server(app);
 const socketio = require('socket.io')(https);
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const enforce = require('express-sslify');
-const sql = require('mssql');
+var sql = require('mssql');
 const { SSL_OP_NO_QUERY_MTU } = require('constants');
 const config = {
   user: 'chatadmin',
@@ -29,11 +29,35 @@ const config = {
 app.get('/', (req, res) => {
   res.send("Https test!!");
 });
-const pool = new sql.ConnectionPool(config);
-const poolConnect = pool.connect((err) => {
-  if (err) return console.error(err);
-  else return console.log('Database connected');
+//INSERT INTO message(message,toUser,fromUser,messageTime,isDeleted) values('Hello bmy oi',1000,1001,'2015-11-05 14:29:36',0);
+sql.connect(config,function(err){
+  console.log(err);
+  var req =new sql.Request();
+  req.query("SELECT * from message",function (err, recordset) {
+            
+    if (err) console.log(err);
+    else console.log(recordset);
+    // send records as a response
+    
+    
 });
+
+
+});
+// const pool = new sql.ConnectionPool(config);
+// const poolConnect = pool.connect((err) => {
+//   if (err) return console.error(err);
+//   else { 
+//     console.log('Database connected');
+//   //DATABASE QUERIES
+//   const obj = sql.Request();
+//   obj.query("CREATE TABLE userTable(userId int PRIMARY KEY AUTO_INCREMENT,userName VARCHAR(20) UNIQUE NOT NULL,dob DATE NOT NULL,gender varchar(10) NOT NULL)");
+//   }
+  
+// });
+
+
+
 app.use(enforce.HTTPS());
 // Creating a promise, and message model for mongoose
 //mongoose.Promise = Promise;
